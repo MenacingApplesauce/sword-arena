@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sword Arena</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1e1e1e, #2b2b2b);
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    header { background: #111; padding: 15px; font-size: 24px; font-weight: bold; }
+    .container { display: flex; justify-content: center; gap: 30px; margin-top: 30px; flex-wrap: wrap; }
+    .box { background: #333; padding: 20px; width: 280px; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
+    .health-bar { width: 100%; height: 20px; background: #555; border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+    .health { height: 100%; background: linear-gradient(90deg, #4caf50, #8bc34a); width: 100%; transition: width 0.3s; }
+    button, select { padding: 10px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+    #message { margin-top: 20px; font-size: 22px; min-height: 30px; }
+    footer { margin-top: 40px; padding: 10px; background: #111; font-size: 14px; color: #aaa; }
+  </style>
+</head>
+<body>
+
+<header>⚔️ Sword Arena ⚔️</header>
+
+<div class="container">
+  <div class="box">
+    <h2>Player</h2>
+    <div class="health-bar"><div id="playerBar" class="health"></div></div>
+    <p>Health: <span id="playerHealth">100</span></p>
+
+    <label for="sword">Choose Sword:</label><br>
+    <select id="sword" onchange="changeSword()">
+      <option value="10">🪵 Wooden Sword (10 dmg)</option>
+      <option value="20">⚔️ Iron Sword (20 dmg)</option>
+      <option value="35">💎 Diamond Sword (35 dmg)</option>
+      <option value="50">🔥 Legendary Sword (50 dmg)</option>
+    </select><br>
+
+    <button onclick="attackEnemy()">Attack Enemy</button>
+  </div>
+
+  <div class="box">
+    <h2>Enemy</h2>
+    <div class="health-bar"><div id="enemyBar" class="health"></div></div>
+    <p>Health: <span id="enemyHealth">100</span></p>
+  </div>
+</div>
+
+<h2 id="message"></h2>
+
+<footer>
+  Made with JavaScript • Your first real web game
+</footer>
+
+<script>
+  let playerHealth = 100;
+  let enemyHealth = 100;
+  let playerDamage = 10;
+  let enemyDamage = 15;
+
+  function updateBars() {
+    document.getElementById("playerBar").style.width = playerHealth + "%";
+    document.getElementById("enemyBar").style.width = enemyHealth + "%";
+    document.getElementById("playerHealth").textContent = playerHealth;
+    document.getElementById("enemyHealth").textContent = enemyHealth;
+  }
+
+  function changeSword() {
+    playerDamage = Number(document.getElementById("sword").value);
+  }
+
+  function attackEnemy() {
+    if (playerHealth <= 0 || enemyHealth <= 0) return;
+
+    let damage = playerDamage + Math.floor(Math.random() * 6);
+    enemyHealth -= damage;
+    if (enemyHealth < 0) enemyHealth = 0;
+    updateBars();
+
+    if (enemyHealth <= 0) {
+      document.getElementById("message").textContent = "🎉 You defeated the enemy!";
+      return;
+    }
+
+    let enemyHit = enemyDamage + Math.floor(Math.random() * 5);
+    playerHealth -= enemyHit;
+    if (playerHealth < 0) playerHealth = 0;
+    updateBars();
+
+    if (playerHealth <= 0) {
+      document.getElementById("message").textContent = "💀 You were defeated!";
+    } else {
+      document.getElementById("message").textContent =
+        `You hit for ${damage}, enemy hit for ${enemyHit}`;
+    }
+  }
+
+  updateBars();
+</script>
+
+</body>
+</html>
